@@ -69,7 +69,10 @@ EXP4_X_MIN = -20.0             # left edge of spatial box, paper Sec. 4.2.2
 EXP4_X_MAX = 220.0             # right edge of spatial box, paper Sec. 4.2.2
 EXP4_GAMMA0 = 8.0             # parabolic kernel time bandwidth, paper Sec. 4.2.2
 EXP4_GAMMA1 = 1.0 / EXP4_SIGMA ** 2  # spatial bandwidth 1/sigma^2 matching diffusion scale, paper Sec. 4.2.2
-EXP4_EPS_WARP = 0.05          # warp epsilon in psi(t,x)=x/sqrt(T-t+eps); not specified in the paper, chosen small relative to T
+EXP4_EPS_WARP = 0.5           # warp epsilon in psi(t,x)=x/sqrt(T-t+eps); not specified in the paper. A small value gives
+                              # a near-singular (AA*+lambda*G) system close to maturity (condition number grows by
+                              # several orders of magnitude as eps_warp shrinks); 0.5 keeps the system well conditioned
+                              # while still localizing the kernel bandwidth near the terminal slice, paper Sec. 4.2.2
 EXP4_LAMBDA = 1e-7            # regularization parameter lambda, paper Sec. 4.2.2
 EXP4_W1 = 1.0                 # objective weight on interior PDE equation, paper Sec. 4.2.2
 EXP4_W2 = 10.0                # objective weight on terminal condition equation, paper Sec. 4.2.2
