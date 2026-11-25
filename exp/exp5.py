@@ -74,11 +74,20 @@ def run_dimension(d: int, n_run: int, r_grid: tuple[int, ...], mc_paths: int,
 
     mc_price, mc_se = bs.mc_max_call_price(S0, K, T, sigma, rho, d, mc_paths, seed + 1000)
 
+    # Index sets are "drawn uniformly at random once, nested in r (prefixes
+    # of one random permutation)" (Sec. 3.5, methodology step 6): the two
+    # block permutations are drawn a single time, for the largest r1, r2
+    # needed over r_grid, and every smaller r takes a prefix of that same
+    # permutation so the representer subspace only grows with r.
+    r2_max = int(np.floor(config.EXP5_R_SELECTED_FRACTION_TERMINAL * max(r_grid)))
+    r1_max = max(r_grid) - r2_max
+    idx_full = ks.select_nystrom_indices([n_run, n_run], [r1_max, r2_max], rng)
+
     results = {"d": d, "mc_price": mc_price, "mc_std_error": mc_se, "per_r": []}
     for r in r_grid:
         r2 = int(np.floor(config.EXP5_R_SELECTED_FRACTION_TERMINAL * r))
         r1 = r - r2
-        idx_list = ks.select_nystrom_indices([n_run, n_run], [r1, r2], rng)
+        idx_list = [idx_full[0][:r1], idx_full[1][:r2]]
         z_blocks, k_r = ks.build_nystrom_matrices(k_fns, [z1, z2], idx_list, ju.build_matrix)
         solution = ks.solve_nystrom(z_blocks, k_r, [f1, f2], w, config.EXP5_LAMBDA)
         objective = ks.nystrom_objective_value(z_blocks, k_r, [f1, f2], w, config.EXP5_LAMBDA, solution)

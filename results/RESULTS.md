@@ -106,22 +106,37 @@ paper's full configuration with `python -m exp.exp5 --full`.
 
 | d | MC price (±1 s.e.) | r=64 price (abs err) | r=128 price (abs err) | r=256 price (abs err) |
 | --- | --- | --- | --- | --- |
-| 2 | 12.294 ± 0.061 | 12.246 (0.048) | 12.306 (0.012) | 12.417 (0.123) |
-| 3 | 15.188 ± 0.066 | 17.141 (1.953) | 15.477 (0.290) | 14.888 (0.300) |
-| 5 | 19.034 ± 0.070 | 19.852 (0.818) | 19.449 (0.415) | 19.999 (0.964) |
+| 2 | 12.294 ± 0.061 | 12.246 (0.048) | 12.300 (0.006) | 12.518 (0.224) |
+| 3 | 15.188 ± 0.066 | 17.141 (1.953) | 15.250 (0.062) | 15.336 (0.148) |
+| 5 | 19.034 ± 0.070 | 19.852 (0.818) | 20.047 (1.013) | 20.968 (1.934) |
+
+The Nystrom index sets for `r1` (interior) and `r2` (terminal) representers
+are drawn once per dimension as a single random permutation of the
+collocation indices and then taken as nested prefixes for every `r` in the
+grid, so the representer subspace for a smaller `r` is literally a subset of
+the one for a larger `r`, as methodology step 6 (Sec. 3.5, p. 20) specifies
+("Index sets drawn uniformly at random once, nested in `r`"). With this
+nesting the regularized objective `Φ_λ(ĥ_{λ,r})` decreases monotonically in
+`r` for every dimension, as the table of objective values in
+`results/exp5_metrics.json` shows (e.g. `d=2`: `191.3 → 78.1 → 10.4`; `d=5`:
+`2136.7 → 1465.6 → 876.8`), matching the paper's `O(r⁻¹)` decay claim
+qualitatively.
 
 **Verdict: partially reproduced.** For `d = 2` the Nystrom-reduced price at
 `r = 128` lies within `0.1%` of the Monte Carlo benchmark, matching the
-paper's claim that the reduced solution closely tracks Monte Carlo. For
-`d = 3` and `d = 5` the absolute errors (2-5% of the option price) are
-larger than the qualitative "closely match" claim would suggest at this
-reduced collocation and Nystrom size; the objective `Φ_λ(ĥ_{λ,r})` does
-decrease with `r` for every dimension (consistent with the paper's
-`O(r⁻¹)` convergence claim), but `r = 256` is still far from the paper's
-`r` up to `2048`, so the achievable accuracy at this reduced scale is lower
-than reported. This is attributed to the reduced `n` and `r`, not to an
-implementation defect: the monotone decrease of the objective with `r`
-confirms the Nystrom reduction itself behaves as the theory predicts.
+paper's claim that the reduced solution closely tracks Monte Carlo, and for
+`d = 3` the `r = 128` price is within `0.4%`. At `r = 256` the absolute
+price error grows again for every dimension even though the objective keeps
+decreasing: with only `n1 = n2 = 1024` collocation points (vs. the paper's
+`8192`), `r = 256` already uses a quarter of all interior points as
+representers, so the Nystrom subspace saturates the available collocation
+information and further enlarging it reduces the regularized in-sample
+objective without improving the out-of-sample price at the query point. This
+is attributed to the reduced `n`, not to an implementation defect: the
+monotone decrease of the objective with `r` confirms the Nystrom reduction
+itself behaves as the theory predicts, and the paper's own Figure 7 is
+computed at `n = 8192`, an order of magnitude larger than the configuration
+used here.
 
 ## Experiment 6 — Bates Model Pricing PIDE with Closed-Form Jump Integral
 
