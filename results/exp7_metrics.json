@@ -1,0 +1,50 @@
+{
+  "experiment": "exp7_variance_gamma_quadrature",
+  "full": false,
+  "lambda": 1e-07,
+  "fft_benchmark_price": 6.83418837625914,
+  "fft_benchmark_price_paper": 6.8398,
+  "convergence": [
+    {
+      "n": 6,
+      "kernel_price": 6.59619776138519,
+      "objective_value": 0.00045416273266887775
+    },
+    {
+      "n": 20,
+      "kernel_price": 6.790614746664234,
+      "objective_value": 0.2815977844729512
+    },
+    {
+      "n": 50,
+      "kernel_price": 7.316401585402826,
+      "objective_value": 0.7985189452653975
+    },
+    {
+      "n": 100,
+      "kernel_price": 6.7799984011689265,
+      "objective_value": 5.386479527833979
+    },
+    {
+      "n": 200,
+      "kernel_price": 6.827067484678999,
+      "objective_value": 8.40678357475806
+    },
+    {
+      "n": 400,
+      "kernel_price": 6.836406480520964,
+      "objective_value": 15.819977590406523
+    },
+    {
+      "n": 800,
+      "kernel_price": 6.843201461015269,
+      "objective_value": 31.087671846389078
+    }
+  ],
+  "n_ci": 800,
+  "n_ci_runs": 16,
+  "ci_mean_price": 6.839362030048505,
+  "ci_99_low": 6.83681117191925,
+  "ci_99_high": 6.84191288817776,
+  "random_seed": 2026
+}

@@ -1,0 +1,12 @@
+{
+  "experiment": "exp6_bates_closed_form_jump",
+  "n": 2048,
+  "full": true,
+  "lambda": 1e-06,
+  "relative_l2_error_vs_fft": 0.025879988664825077,
+  "max_abs_error_vs_fft": 0.8283453075573154,
+  "atm_kernel_price": 8.250530733843334,
+  "atm_fft_price": 8.381260736201726,
+  "objective_value": 296.266201810742,
+  "random_seed": 2026
+}

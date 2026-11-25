@@ -107,8 +107,8 @@ EXP5_MC_PATHS_PAPER = 2 ** 20  # Monte Carlo benchmark paths, paper Sec. 4.2.3
 # Executed configuration: reduced to fit the available compute budget while
 # preserving the method (Nystrom with nested index sets, same kernel and
 # operator). See results/RESULTS.md, "Deviations from the paper".
-EXP5_N_RUN = 2 ** 11           # executed n1 = n2 Sobol collocation points
-EXP5_R_GRID_RUN = (2 ** 6, 2 ** 7, 2 ** 8, 2 ** 9)  # executed Nystrom sizes r
+EXP5_N_RUN = 2 ** 10            # executed n1 = n2 Sobol collocation points (memory-safe reduction, see results/RESULTS.md)
+EXP5_R_GRID_RUN = (2 ** 6, 2 ** 7, 2 ** 8)  # executed Nystrom sizes r (memory-safe reduction, see results/RESULTS.md)
 EXP5_MC_PATHS_RUN = 2 ** 16    # executed Monte Carlo benchmark paths
 EXP5_R_SELECTED_FRACTION_TERMINAL = 0.4  # fraction r2/r taken from terminal condition, paper Sec. 4.2.3 (r2=floor(0.4r))
 

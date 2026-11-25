@@ -34,9 +34,11 @@ def carr_madan_call_prices(char_func: Callable[[np.ndarray], np.ndarray],
     """
     lambda_ = 2 * np.pi / (n * eta)       # log-strike grid spacing
     b = n * lambda_ / 2                     # half-width of the log-strike grid
-    log_x0 = np.log(S0)
     u = np.arange(n) * eta
-    log_strike_grid = -b + lambda_ * np.arange(n) + log_x0
+    # The characteristic function already carries ln(S0) in its phase
+    # (it is E[exp(i*u*ln(S_T))]), so the FFT log-strike grid must span
+    # [-b, b) in absolute log-strike, not be re-centered on ln(S0).
+    log_strike_grid = -b + lambda_ * np.arange(n)
 
     j = np.arange(1, n + 1)
     simpson = (3 + (-1) ** j - (j == 1).astype(float)) / 3  # Simpson weights
