@@ -1,0 +1,24 @@
+{
+  "experiment": "exp2_second_order_ode_fourier_kernel",
+  "lambda": 1e-10,
+  "L": 20,
+  "n1": 150,
+  "n2": 2,
+  "per_n": {
+    "1": {
+      "zeta_n": 61.68502750680849,
+      "relative_l2_error": 1.0884357535456078e-08,
+      "max_abs_error": 1.1923285136994366e-08
+    },
+    "2": {
+      "zeta_n": 199.8594891220595,
+      "relative_l2_error": 6.338169482420482e-08,
+      "max_abs_error": 6.726398227296926e-08
+    },
+    "5": {
+      "zeta_n": 1088.1238852201018,
+      "relative_l2_error": 1.686450414165269e-06,
+      "max_abs_error": 1.7265215319639537e-06
+    }
+  }
+}

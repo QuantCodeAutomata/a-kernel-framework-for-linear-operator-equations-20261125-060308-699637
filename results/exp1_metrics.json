@@ -1,0 +1,11 @@
+{
+  "experiment": "exp1_first_order_ode_gaussian_kernel",
+  "gamma": 100.0,
+  "lambda": 1e-08,
+  "n1": 100,
+  "n2": 2,
+  "relative_l2_error": 0.00018458362828815836,
+  "max_abs_error": 0.00019404573512460388,
+  "objective_value": 5.651669680518115e-08,
+  "random_seed": 2026
+}
