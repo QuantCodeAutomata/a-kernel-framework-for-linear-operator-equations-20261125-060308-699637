@@ -64,6 +64,26 @@ def sobol_time_space_points(n: int, t_low: float, t_high: float,
     return t, x
 
 
+def sobol_time_lognormal_points(n: int, T: float, mean_log: np.ndarray, cov_log: np.ndarray,
+                                 seed: int) -> tuple[np.ndarray, np.ndarray]:
+    """Scrambled Sobol points with time uniform on (0,T) (first coordinate)
+    and space mapped to a correlated lognormal distribution (paper Sec.
+    4.2.3: "map to uniform on (0,T) in time, and to correlated lognormal
+    distribution S0*exp(sigma*sqrt(T)*Z) ... in space").
+
+    Returns (t, x) with t of shape (n,) and x of shape (n, d).
+    """
+    from scipy.stats import norm
+
+    d = mean_log.shape[0]
+    u = sobol_uniform_points(n, d + 1, seed)
+    t = u[:, 0] * T
+    z = norm.ppf(u[:, 1:])
+    chol = np.linalg.cholesky(cov_log)
+    log_s = mean_log + z @ chol.T
+    return t, np.exp(log_s)
+
+
 def sobol_lognormal_points(n: int, d: int, mean_log: np.ndarray, cov_log: np.ndarray,
                             seed: int) -> np.ndarray:
     """n scrambled Sobol points mapped to a correlated multivariate normal
