@@ -60,6 +60,28 @@ def make_backward_parabolic_kernel(gamma0: float, gamma1: float, eps: float, T: 
     return k
 
 
+def make_backward_parabolic_kernel_scaled(gamma0: float, gamma1: float, eps: float, T: float,
+                                           shift: float, scale: float) -> Callable:
+    """Backward-warped parabolic kernel with an affine spatial rescaling,
+
+        psi(t,x) = (x - shift*1) / (scale * sqrt(T - t + eps))     (Sec. 4.2.3, Eq. 53),
+
+    used for the multi-asset Black-Scholes max-call (paper Sec. 4.2.3, p.19-20,
+    "psi(t,x) = (x-S0*1)/(S0*sigma*sqrt(T-t+eps))"), with ``shift=S0`` and
+    ``scale=S0*sigma``. ``x`` may be a vector of any dimension d.
+    """
+
+    def k(z: jnp.ndarray, w: jnp.ndarray) -> jnp.ndarray:
+        t, x = z[0], z[1:]
+        s, y = w[0], w[1:]
+        psi_z = (x - shift) / (scale * jnp.sqrt(T - t + eps))
+        psi_w = (y - shift) / (scale * jnp.sqrt(T - s + eps))
+        return jnp.exp(-gamma0 / 2 * (t - s) ** 2
+                        - gamma1 / 2 * jnp.sum((psi_z - psi_w) ** 2))
+
+    return k
+
+
 def make_anisotropic_gaussian_kernel(gammas: np.ndarray) -> Callable:
     """k(z,w) = exp(-1/2 sum_i gamma_i (z_i-w_i)^2), no time-dependent warp.
 

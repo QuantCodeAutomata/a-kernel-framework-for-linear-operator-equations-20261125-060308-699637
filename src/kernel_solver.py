@@ -17,7 +17,7 @@ cover linear-operator-equation collocation with Riesz representers.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Sequence
+from typing import Callable, Sequence
 
 import numpy as np
 
@@ -176,3 +176,39 @@ def select_nystrom_indices(n_list: Sequence[int],
     """
     perms = [rng.permutation(n_m) for n_m in n_list]
     return [perm[:r_m] for perm, r_m in zip(perms, r_list)]
+
+
+def build_nystrom_matrices(k_fns: dict[tuple[int, int], Callable],
+                            z_list: Sequence[np.ndarray],
+                            idx_list: Sequence[np.ndarray],
+                            build_matrix_fn: Callable) -> tuple[list[np.ndarray], np.ndarray]:
+    """Assemble the Nystrom matrices Z_m (Eq. 37) and K_r (Eq. 39) from the
+    pairwise operator-induced kernel functions ``k_fns[(l, m)](x, y)``.
+
+    ``z_list[m]`` holds all n_m collocation points of block m; ``idx_list[m]``
+    the indices of the selected representers within block m (Sec. 3.5). The
+    selected representers are ordered by block then index. ``build_matrix_fn``
+    vectorizes a pairwise kernel function over point arrays, matching the
+    signature of ``src.jax_utils.build_matrix``.
+
+    Returns ``z_blocks`` with ``z_blocks[m]`` of shape (n_m, r), entry (n, j)
+    = A_m varphi_j(x_{m,n}), and ``k_r`` of shape (r, r), the Gram matrix of
+    the selected representers.
+    """
+    M = len(z_list)
+    rep_points = [z_list[m][idx_list[m]] for m in range(M)]
+    r_sizes = [len(idx) for idx in idx_list]
+
+    k_r_rows = []
+    for l in range(M):
+        row_blocks = [build_matrix_fn(k_fns[(l, m)], rep_points[l], rep_points[m]) for m in range(M)]
+        k_r_rows.append(np.concatenate(row_blocks, axis=1))
+    k_r = np.concatenate(k_r_rows, axis=0)
+    r = sum(r_sizes)
+    assert k_r.shape == (r, r), f"expected ({r},{r}), got {k_r.shape}"
+
+    z_blocks = []
+    for m in range(M):
+        col_blocks = [build_matrix_fn(k_fns[(m, mp)], z_list[m], rep_points[mp]) for mp in range(M)]
+        z_blocks.append(np.concatenate(col_blocks, axis=1))
+    return z_blocks, k_r
