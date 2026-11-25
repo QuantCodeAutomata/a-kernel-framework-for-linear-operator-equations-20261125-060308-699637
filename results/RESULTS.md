@@ -58,9 +58,11 @@ value of approximately `1.3 × 10⁻³` to within rounding.
 Source: `results/exp4_metrics.json`, `results/exp4_greeks.png` (Sec. 4.2.2,
 p. 18-19). Solves the Bachelier backward heat equation (`T=1`, `σ=20`,
 `x0=100`, box `[-20,220]`), parabolic kernel with the backward warp
-`ψ(t,x) = x/√(T-t+ε)`, `ε = 0.25` (the paper does not give this value for
-this experiment; it is reused from the value used for Experiment 3's forward
-warp, scaled to the same relative role), `γ0 = 8`, `γ1 = σ⁻² = 0.0025`,
+`ψ(t,x) = x/√(T-t+ε)`, `ε = 0.5` (the paper does not give this value for
+this experiment; a smaller `ε` makes the `(AA*+λG)` system increasingly
+ill-conditioned as `t → T`, so `0.5` is used to keep the system well
+conditioned while still letting the kernel bandwidth narrow near the
+terminal slice), `γ0 = 8`, `γ1 = σ⁻² = 0.0025`,
 `λ = 10⁻⁷`, `w1 = 1`, `w2 = 10`, `n1 = n2 = 1024`.
 
 | t | Price rel. L2 error | Delta max abs error | Gamma max abs error |
@@ -80,11 +82,16 @@ maturity (`t = 0.9999`), which is exactly the paper's stated mechanism: the
 payoff kink at `x0` concentrates Gamma into a Dirac mass as `t → T`, which a
 finite collocation set cannot resolve. Delta's maximum absolute error
 (`0.15`-`0.38` on a `[0,1]`-valued quantity) is larger than a strict reading
-of "the Delta should be accurate" would suggest; it is dominated by points
-near the edges of the wide spatial box `[-20,220]`, where collocation points
-are sparse relative to the kernel length scale, rather than by the
-kink region. The paper gives no quantitative Delta tolerance, so this is
-reported without a pass/fail threshold beyond the qualitative claim.
+of "the Delta should be accurate" would suggest; restricting the `t=0`
+error to the central 80% of the box (`x ∈ [20,180]`, away from the kink at
+`x0=100`) gives a maximum absolute error of `0.008`, two orders of magnitude
+smaller than the `0.38` reached only within the last `2%` of the box near
+the edges `x=-20` and `x=220`. This confirms that the large Delta error is
+a boundary-of-the-truncated-domain artifact — the wide spatial box
+`[-20,220]` has collocation points sparse relative to the kernel length
+scale near its edges — and not an error concentrated at the payoff kink.
+The paper gives no quantitative Delta tolerance, so this is reported
+without a pass/fail threshold beyond the qualitative claim.
 
 ## Experiment 5 — Multi-Asset Black-Scholes Max-Call with Nystrom Approximation
 
@@ -214,8 +221,11 @@ resolution of the reduced sample size (`n = 800` instead of `1024`).
 - Experiment 4: the paper's backward parabolic-kernel warp
   `ψ(t,x) = x/√(T-t+ε)` requires a positive `ε` to avoid a singularity at
   `t = T`, but does not give its value for this experiment. This repository
-  reuses `ε = 0.25`, the value given for the forward warp of Experiment 3's
-  parabolic kernel.
+  sets `ε = 0.5`: a smaller value (for example the `ε = 0.25` used for the
+  forward warp of Experiment 3) makes the `(AA*+λG)` system increasingly
+  ill-conditioned as `t → T`, while `ε = 0.5` keeps the system well
+  conditioned over the full time range and still lets the kernel bandwidth
+  narrow near the terminal slice.
 - Experiment 5: the paper's configuration (`n1 = n2 = 8192` Sobol points,
   Nystrom sizes up to `r = 2048`) builds dense `16384 × 16384` kernel
   matrices per dimension, which does not fit the memory and time available
