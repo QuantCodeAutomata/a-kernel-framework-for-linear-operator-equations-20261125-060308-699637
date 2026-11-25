@@ -104,9 +104,10 @@ EXP5_N_PAPER = 2 ** 13         # n1 = n2 Sobol collocation points, paper Sec. 4.
 EXP5_R_GRID_PAPER = (2 ** 6, 2 ** 7, 2 ** 8, 2 ** 9, 2 ** 10, 2 ** 11)  # Nystrom sizes r, paper Sec. 4.2.3
 EXP5_MC_PATHS_PAPER = 2 ** 20  # Monte Carlo benchmark paths, paper Sec. 4.2.3
 
-# Executed configuration: reduced to fit the available compute budget while
-# preserving the method (Nystrom with nested index sets, same kernel and
-# operator). See results/RESULTS.md, "Deviations from the paper".
+# Executed configuration: reduced to fit the memory and time available for
+# this replication while preserving the method (Nystrom with nested index
+# sets, same kernel and operator). See results/RESULTS.md, "Deviations from
+# the paper".
 EXP5_N_RUN = 2 ** 10            # executed n1 = n2 Sobol collocation points (memory-safe reduction, see results/RESULTS.md)
 EXP5_R_GRID_RUN = (2 ** 6, 2 ** 7, 2 ** 8)  # executed Nystrom sizes r (memory-safe reduction, see results/RESULTS.md)
 EXP5_MC_PATHS_RUN = 2 ** 16    # executed Monte Carlo benchmark paths
@@ -135,7 +136,7 @@ EXP6_GAMMA1 = 25.0              # kernel log-price bandwidth, paper Sec. 4.2.4
 EXP6_GAMMA2 = 14.0              # kernel variance bandwidth (paper: "approximately 14", selected by cross-validation)
 EXP6_LAMBDA = 1e-6              # regularization parameter lambda, paper Sec. 4.2.4
 EXP6_N_PAPER = 2 ** 11          # n1 = n2 Sobol collocation points, paper Sec. 4.2.4
-EXP6_N_RUN = 2 ** 10            # executed n1 = n2 Sobol collocation points (reduced to fit the compute budget)
+EXP6_N_RUN = 2 ** 10            # executed n1 = n2 Sobol collocation points (reduced to fit the time available for this replication)
 EXP6_N_PRICE_POINTS = 41        # number of spot prices for the FFT comparison curve, not specified in the paper
 
 # ---------------------------------------------------------------------------
@@ -154,7 +155,7 @@ EXP7_GAMMA1 = 1.0 / (2 * EXP7_SIGMA * np.sqrt(EXP7_T)) ** 2  # kernel log-price 
 EXP7_LAMBDA = 1e-7               # regularization parameter lambda, paper Sec. 4.2.5
 EXP7_N_GAUSS_LAGUERRE = 12       # Gauss-Laguerre quadrature nodes per half-line, paper Sec. 4.2.5
 EXP7_N_CONVERGENCE_PAPER = (6, 20, 50, 100, 200, 400, 800, 1600)  # collocation sizes for the convergence study, paper Sec. 4.2.5
-EXP7_N_CONVERGENCE_RUN = (6, 20, 50, 100, 200, 400, 800)  # executed sizes (reduced to fit the compute budget; see RESULTS.md)
+EXP7_N_CONVERGENCE_RUN = (6, 20, 50, 100, 200, 400, 800)  # executed sizes (reduced to fit the time available for this replication; see RESULTS.md)
 EXP7_N_CI_PAPER = 2 ** 10        # collocation size for the confidence-interval study, paper Sec. 4.2.5
 EXP7_N_CI_RUNS_PAPER = 16        # number of randomized Sobol runs for the CI, paper Sec. 4.2.5
 EXP7_N_CI_RUNS_RUN = 16          # executed number of randomized runs (kept at the paper value)

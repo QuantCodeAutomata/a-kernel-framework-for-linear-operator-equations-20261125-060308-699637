@@ -99,7 +99,7 @@ points, Nystrom sizes `r ∈ {64,...,2048}`, and a `2^20`-path Monte Carlo
 benchmark. Downloading is not applicable here (no market data), but the
 `8192`-point configuration with `r` up to `2048` requires dense kernel
 matrices of size `16384 × 16384` per dimension, which exceeds the
-process memory budget available for this run; the executed configuration
+memory available for this run; the executed configuration
 uses `n1 = n2 = 1024` Sobol points, `r ∈ {64, 128, 256}`, and a `2^16`-path
 antithetic Monte Carlo benchmark (see "Deviations from the paper"). Run the
 paper's full configuration with `python -m exp.exp5 --full`.
@@ -218,9 +218,8 @@ resolution of the reduced sample size (`n = 800` instead of `1024`).
   parabolic kernel.
 - Experiment 5: the paper's configuration (`n1 = n2 = 8192` Sobol points,
   Nystrom sizes up to `r = 2048`) builds dense `16384 × 16384` kernel
-  matrices per dimension, which does not fit the memory budget available
-  for this replication and would not finish before the time available for
-  this replication. The executed configuration reduces this to
+  matrices per dimension, which does not fit the memory and time available
+  for this replication. The executed configuration reduces this to
   `n1 = n2 = 1024` Sobol points, Nystrom sizes `r ∈ {64, 128, 256}`, and a
   `2^16`-path Monte Carlo benchmark; `python -m exp.exp5 --full` selects the
   paper's full configuration (`EXP5_N_PAPER`, `EXP5_R_GRID_PAPER`,
@@ -232,8 +231,8 @@ resolution of the reduced sample size (`n = 800` instead of `1024`).
 - Experiment 6: the paper states `γ2 ≈ 14`, "selected by cross-validation",
   without giving the cross-validation grid or the exact value. This
   repository uses `γ2 = 14` and does not re-run a cross-validation search.
-  The risk-free rate for the Bates experiment is not given in the retrieved
-  methodology; this repository sets `r = 0`, matching the paper's PIDE as
+  The risk-free rate for the Bates experiment is not specified by the
+  paper; this repository sets `r = 0`, matching the paper's PIDE as
   stated (`∂t u + Gu + Iu - ζu = 0`, with discounting folded into the
   operator `G` rather than a separate rate term).
 - Experiment 7: the paper's confidence-interval study uses `n = 1024`; the
@@ -255,7 +254,7 @@ resolution of the reduced sample size (`n = 800` instead of `1024`).
 
 ## Not reproduced
 
-Nothing is omitted outright: all seven selected experiments have executable
+Nothing is omitted outright: all seven experiments have executable
 code, a completed run, and a reported comparison above. The items listed
 under "Deviations from the paper" (Experiment 5's full `8192`/`2048`
 Nystrom configuration, Experiment 7's full `n = 1024`/`1600` configuration,

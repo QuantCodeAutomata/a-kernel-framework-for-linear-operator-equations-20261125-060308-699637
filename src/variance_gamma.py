@@ -24,8 +24,8 @@ Custom implementation (paper Sec. 4.2.5, Eq. 63-64): the change of variables
 mapping the VG Levy measure to a standard Gauss-Laguerre quadrature on
 (0, infinity) is specific to this Levy measure and not provided by any
 library in this environment; ``numpy.polynomial.laguerre.laggauss`` supplies
-only the standard nodes/weights for the weight exp(-z), as recommended by
-the paper's implementation notes.
+only the standard nodes/weights for the weight exp(-z), which this module
+rescales to the VG Levy density on each half-line.
 
 Because this jump operator is defined generically as an
 ``src.jax_utils.Operator`` callable (evaluating ``f`` at quadrature-shifted
